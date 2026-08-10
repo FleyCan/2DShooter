@@ -1,0 +1,1 @@
+g++ -Wfatal-errors -std=c++23 src/*.cpp -Iinc -o bin/sfml -lsfml-graphics -lsfml-network -lsfml-system -lsfml-window -lsfml-audio
