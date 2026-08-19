@@ -28,15 +28,19 @@ struct Gun {
 	sf::RectangleShape shape{};
 	Firemode firemode = SEMI;
 
+	int burstcount = 3;
+	double RPM = 0;
+
 	double counter = 0;
-	int bulletcount = 0;
+	int bulletcounter = 0;
 
 	bool holdingTrigger = false;
 	bool lastState = true;
 
-	Gun(sf::RectangleShape shape,Vector<float,2> position)
+	Gun(sf::RectangleShape shape,Vector<float,2> position, double RPM)
 		: shape{shape}
 		, position{position}
+		, RPM{RPM}
 	{}
 
 	void update(

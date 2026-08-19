@@ -30,7 +30,7 @@ void Gun::shoot(BulletSimulator& simulator) {
 	if(holdingTrigger) {
 		if(firemode == Gun::Firemode::SEMI) {
 			if(holdingTrigger != lastState) {
-				if(counter > 0.05) {
+				if(RPM / 60 * counter > 1) {
 					simulator.addBullet(
 						position
 						+ Vector<float, 2>::polar(
@@ -48,7 +48,7 @@ void Gun::shoot(BulletSimulator& simulator) {
 		}
 
 		if(firemode == Gun::Firemode::FULL) {
-			if(counter > 0.1) {
+			if(RPM / 60 * counter > 1) {
 				simulator.addBullet(
 					position
 					+ Vector<float, 2>::polar(
@@ -65,7 +65,7 @@ void Gun::shoot(BulletSimulator& simulator) {
 		}
 
 		if(firemode == Gun::Firemode::BURST) {
-			if(counter > 0.3) {
+			if((RPM / 60 * counter) > (1 * burstcount)) {
 				simulator.addBullet(
 					position
 					+ Vector<float, 2>::polar(
@@ -77,10 +77,10 @@ void Gun::shoot(BulletSimulator& simulator) {
 						, orientation
 					)
 				);
-				++bulletcount;
-				if(bulletcount == 3) {
+				++bulletcounter;
+				if(bulletcounter == burstcount) {
 					counter = 0;
-					bulletcount = 0;
+					bulletcounter = 0;
 				}
 			}
 		}

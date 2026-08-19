@@ -73,7 +73,7 @@ int main() {
 	rectangle.setFillColor(sf::Color::Green);
 	rectangle.setOutlineThickness(5.0f);
 
-	Gun gun{rectangle,{512,512}};
+	Gun gun{rectangle,{512,512},600};
 
 
 	sf::CircleShape circle{50.0f};
@@ -157,6 +157,7 @@ int main() {
 		<<  radiantToDegree * (mouse_vector - player.position).orientation()
 		<< '\n';
 		std::cout << "gun rotation" << player.gun.shape.getRotation() << '\n';
+		std::cout << "number of bullets = " << bulletSimulator.bullets.size() << '\n';
 
 		player.update(
 			  Vector<unsigned int,2> {
