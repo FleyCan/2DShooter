@@ -22,6 +22,7 @@
 #include "Input.hpp"
 #include "Gun.hpp"
 #include "BulletSimulator.hpp"
+#include "Magazine.hpp"
 
 double radiantToDegree = 180/M_PI;
 
@@ -73,7 +74,9 @@ int main() {
 	rectangle.setFillColor(sf::Color::Green);
 	rectangle.setOutlineThickness(5.0f);
 
-	Gun gun{rectangle,{512,512},600};
+	Magazine magazine{{5.56, 45},30};
+
+	Gun gun{rectangle,{512,512},600,{5.56, 45},magazine};
 
 
 	sf::CircleShape circle{50.0f};
@@ -128,6 +131,16 @@ int main() {
 				}
 				if(sf::Keyboard::isKeyPressed(sf::Keyboard::Scancode::Space)) {
 					enemy.gun.holdingTrigger = !enemy.gun.holdingTrigger;
+				}
+				if(sf::Keyboard::isKeyPressed(sf::Keyboard::Scancode::R)) {
+					player.gun.magazine.addAmmo(
+						Ammunition{
+							  {5.56,45}
+							, 10
+							, 5
+							,1028
+						}
+					);
 				}
 			}
 		}

@@ -12,9 +12,12 @@
 #include <SFML/Window/Window.hpp>
 
 #include "Vector.hpp"
+#include "Ammunition.hpp"
 
 
 struct Bullet {
+
+	Ammunition ammo;
 
 	Vector<float,2> position;
 	Vector<float,2> velocity;
@@ -22,10 +25,12 @@ struct Bullet {
 	sf::CircleShape shape{10.0f};
 
 	Bullet(
-		  Vector<float,2> position
+		  Ammunition ammo
+		, Vector<float,2> position
 		, Vector<float,2> velocity
 	)
-		: position{position}
+		: ammo{ammo}
+		, position{position}
 		, velocity{velocity}
 	{
 		shape.setFillColor(sf::Color::Yellow);

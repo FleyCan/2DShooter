@@ -12,6 +12,8 @@
 #include <SFML/Window/VideoMode.hpp>
 #include <SFML/Window/Window.hpp>
 
+#include "AmmoType.hpp"
+#include "Magazine.hpp"
 #include "Vector.hpp"
 #include "BulletSimulator.hpp"
 
@@ -28,6 +30,9 @@ struct Gun {
 	sf::RectangleShape shape{};
 	Firemode firemode = SEMI;
 
+	AmmoType ammotype;
+	Magazine magazine;
+
 	int burstcount = 3;
 	double RPM = 0;
 
@@ -37,10 +42,18 @@ struct Gun {
 	bool holdingTrigger = false;
 	bool lastState = true;
 
-	Gun(sf::RectangleShape shape,Vector<float,2> position, double RPM)
+	Gun(
+		 sf::RectangleShape shape
+		, Vector<float,2> position
+		, double RPM
+		, AmmoType ammotype
+		, Magazine magazine
+	)
 		: shape{shape}
 		, position{position}
 		, RPM{RPM}
+		, ammotype{ammotype}
+		, magazine{magazine}
 	{}
 
 	void update(

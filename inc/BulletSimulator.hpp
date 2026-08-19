@@ -9,10 +9,7 @@ struct BulletSimulator {
 
 	std::vector<Bullet> bullets;
 
-	void addBullet(
-		  Vector<float,2> position
-		, Vector<float,2> velocity
-	);
+	void addBullet(Bullet const& bullet);
 
 	void update(
 		  double dt_in_seconds

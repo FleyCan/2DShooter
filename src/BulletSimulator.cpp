@@ -1,15 +1,7 @@
 #include "BulletSimulator.hpp"
 
-void BulletSimulator::addBullet(
-	Vector<float,2> position
-	, Vector<float,2> velocity
-) {
-	bullets.push_back(
-		Bullet{
-			position
-			, velocity
-		}
-	);
+void BulletSimulator::addBullet(Bullet const& bullet) {
+	bullets.push_back(bullet);
 }
 
 void BulletSimulator::update(

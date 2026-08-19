@@ -1,4 +1,5 @@
 #include "Gun.hpp"
+#include "Ammunition.hpp"
 
 void Gun::update(
 	Vector<float,2> position
@@ -28,20 +29,31 @@ void Gun::cycleFiremode() {
 void Gun::shoot(BulletSimulator& simulator) {
 
 	if(holdingTrigger) {
+
+	std::optional<Ammunition> ammo_o = magazine.getAmmo();
+
+	if(ammo_o) {
+
+		Ammunition ammo = ammo_o.value();
+
+		Bullet bullet{
+			  ammo
+			, position
+			+ Vector<float, 2>::polar(
+				shape.getSize().x
+				, orientation
+			  )
+			, Vector<float, 2>::polar(
+				  ammo.speed
+				, orientation
+			  )
+		};
+
 		if(firemode == Gun::Firemode::SEMI) {
 			if(holdingTrigger != lastState) {
 				if(RPM / 60 * counter > 1) {
-					simulator.addBullet(
-						position
-						+ Vector<float, 2>::polar(
-							shape.getSize().x
-							, orientation
-						)
-						, Vector<float, 2>::polar(
-							1028.0f
-							, orientation
-						)
-					);
+					simulator.addBullet(bullet);
+					magazine.removeAmmo();
 				counter = 0;
 				}
 			}
@@ -49,34 +61,16 @@ void Gun::shoot(BulletSimulator& simulator) {
 
 		if(firemode == Gun::Firemode::FULL) {
 			if(RPM / 60 * counter > 1) {
-				simulator.addBullet(
-					position
-					+ Vector<float, 2>::polar(
-						shape.getSize().x
-						, orientation
-					)
-					, Vector<float, 2>::polar(
-						1028.0f
-						, orientation
-					)
-				);
+				simulator.addBullet(bullet);
+				magazine.removeAmmo();
 				counter = 0;
 			}
 		}
 
 		if(firemode == Gun::Firemode::BURST) {
 			if((RPM / 60 * counter) > (1 * burstcount)) {
-				simulator.addBullet(
-					position
-					+ Vector<float, 2>::polar(
-						shape.getSize().x
-						, orientation
-					)
-					, Vector<float, 2>::polar(
-						1028.0f
-						, orientation
-					)
-				);
+					simulator.addBullet(bullet);
+					magazine.removeAmmo();
 				++bulletcounter;
 				if(bulletcounter == burstcount) {
 					counter = 0;
@@ -86,5 +80,6 @@ void Gun::shoot(BulletSimulator& simulator) {
 		}
 	}
 
+	}
 	lastState = holdingTrigger;
 }
