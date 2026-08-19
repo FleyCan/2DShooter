@@ -30,17 +30,20 @@ void Gun::shoot(BulletSimulator& simulator) {
 	if(holdingTrigger) {
 		if(firemode == Gun::Firemode::SEMI) {
 			if(holdingTrigger != lastState) {
-				simulator.addBullet(
-					position
-					+ Vector<float, 2>::polar(
-						shape.getSize().x
-						, orientation
-					)
-					, Vector<float, 2>::polar(
-						1028.0f
-						, orientation
-					)
-				);
+				if(counter > 0.05) {
+					simulator.addBullet(
+						position
+						+ Vector<float, 2>::polar(
+							shape.getSize().x
+							, orientation
+						)
+						, Vector<float, 2>::polar(
+							1028.0f
+							, orientation
+						)
+					);
+				counter = 0;
+				}
 			}
 		}
 
