@@ -17,6 +17,7 @@
 #include <vector>
 #include <memory>
 
+#include "Firemode.hpp"
 #include "Vector.hpp"
 #include "Person.hpp"
 #include "Input.hpp"
@@ -76,7 +77,9 @@ int main() {
 
 	Magazine magazine{{5.56, 45},30};
 
-	Gun gun{rectangle,{512,512},600,{5.56, 45},magazine};
+	Full full{600};
+
+	Gun gun{rectangle,{512,512},600,{5.56, 45},magazine,&full};
 
 
 	sf::CircleShape circle{50.0f};
@@ -89,7 +92,7 @@ int main() {
 	circle.setFillColor(sf::Color::Red);
 
 	Person enemy{{900,900},2,{1024,1024},circle,gun};
-	enemy.gun.firemode = Gun::Firemode::FULL;
+
 
 	sf::Vector2i mouse_position{};
 
@@ -127,7 +130,7 @@ int main() {
 			}
 			if(event.type == sf::Event::KeyPressed) {
 				if(sf::Keyboard::isKeyPressed(sf::Keyboard::Scancode::V)) {
-					player.gun.cycleFiremode();
+					//player.gun.cycleFiremode();
 				}
 				if(sf::Keyboard::isKeyPressed(sf::Keyboard::Scancode::Space)) {
 					enemy.gun.holdingTrigger = !enemy.gun.holdingTrigger;
@@ -147,10 +150,6 @@ int main() {
 
 		Input::captureArrowKeys(event,input);
 
-		enemy.gun.shoot(bulletSimulator);
-
-		player.gun.shoot(bulletSimulator);
-
 		Vector<float,2> mouse_vector {
 			  static_cast<float>(mouse_position.x)
 			, static_cast<float>(mouse_position.y)
@@ -161,6 +160,8 @@ int main() {
 		double dt_in_seconds = delta.count();
 		enemy_counter += dt_in_seconds;
 		last_time = now;
+
+		player.gun.update(bulletSimulator, dt_in_seconds);
 
 		std::cout << dt_in_seconds << '\n';
 		std::cout << input << '\n';
@@ -181,10 +182,9 @@ int main() {
 			, dt_in_seconds
 		);
 
-		player.gun.update(
+		player.gun.updatePosition(
 			  player.position
 			, (mouse_vector - player.position).orientation()
-			, dt_in_seconds
 		);
 
 		enemy.update(
@@ -196,10 +196,9 @@ int main() {
 			, dt_in_seconds
 		);
 
-		enemy.gun.update(
+		enemy.gun.updatePosition(
 			  enemy.position
 			, (player.position - enemy.position).orientation()
-			, dt_in_seconds
 		);
 
 		bulletSimulator.update(

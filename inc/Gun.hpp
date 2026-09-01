@@ -16,31 +16,21 @@
 #include "Magazine.hpp"
 #include "Vector.hpp"
 #include "BulletSimulator.hpp"
+#include "Firemode.hpp"
+
 
 struct Gun {
-
-	enum Firemode {
-		  SEMI
-		, BURST
-		, FULL
-	};
 
 	Vector<float,2> position;
 	float orientation;
 	sf::RectangleShape shape{};
-	Firemode firemode = SEMI;
 
 	AmmoType ammotype;
 	Magazine magazine;
 
-	int burstcount = 3;
-	double RPM = 0;
-
-	double counter = 0;
-	int bulletcounter = 0;
-
 	bool holdingTrigger = false;
-	bool lastState = true;
+
+	Firemode* firemode;
 
 	Gun(
 		 sf::RectangleShape shape
@@ -48,22 +38,22 @@ struct Gun {
 		, double RPM
 		, AmmoType ammotype
 		, Magazine magazine
+		, Firemode* firemode //scary | unique_pointer?
 	)
 		: shape{shape}
 		, position{position}
-		, RPM{RPM}
 		, ammotype{ammotype}
 		, magazine{magazine}
+		, firemode{firemode}
 	{}
 
-	void update(
+	void updatePosition(
 		  Vector<float,2> position
 		, float angle_radians
-		, double dt
 	);
 
-	void cycleFiremode();
+	void update(BulletSimulator& simulator, double dt);
 
-	void shoot(BulletSimulator& simulator);
+	void cycleFiremode();
 
 };
