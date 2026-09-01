@@ -18,6 +18,8 @@
 #include "BulletSimulator.hpp"
 #include "Firemode.hpp"
 
+#include <memory>
+
 
 struct Gun {
 
@@ -26,9 +28,12 @@ struct Gun {
 	sf::RectangleShape shape{};
 
 	AmmoType ammotype;
-	Magazine magazine;
+	std::unique_ptr<Magazine> magazine;
+	// Magazine magazine;
 
 	bool holdingTrigger = false;
+
+	//std::vector<std::unique_ptr<Firemode>> firemodes; //scary | unique_pointer? | construct_at error
 
 	Firemode* firemode;
 
@@ -38,14 +43,24 @@ struct Gun {
 		, double RPM
 		, AmmoType ammotype
 		, Magazine magazine
-		, Firemode* firemode //scary | unique_pointer?
+		, Firemode* firemode
 	)
 		: shape{shape}
 		, position{position}
 		, ammotype{ammotype}
-		, magazine{magazine}
+		//, magazine{magazine}
 		, firemode{firemode}
 	{}
+
+	// Gun(Gun const& other)
+	// 	: position{other.position}
+	// 	, orientation{other.orientation}
+	// 	, shape{other.shape}
+	// 	, ammotype{other.ammotype}
+	// 	, firemode{other.firemode}
+	// {
+ //
+	// }
 
 	void updatePosition(
 		  Vector<float,2> position
@@ -53,6 +68,8 @@ struct Gun {
 	);
 
 	void update(BulletSimulator& simulator, double dt);
+
+	void addFiremode(Firemode* firemode);
 
 	void cycleFiremode();
 

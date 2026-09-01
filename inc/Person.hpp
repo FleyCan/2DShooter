@@ -12,6 +12,7 @@
 #include <SFML/Window/Window.hpp>
 
 #include <cmath>
+#include <memory>
 
 #include "Vector.hpp"
 #include "Input.hpp"
@@ -25,21 +26,22 @@ struct Person {
 
 	Vector<unsigned int,2> maxPosition;
 
-	Gun gun;
+	std::unique_ptr<Gun> gun;
 
 	Person(
 		  Vector<float,2> position
 		, double speed
 		, Vector<unsigned int,2> maxPosition
 		, sf::CircleShape shape
-		, Gun gun
+		, Gun* gun
 	)
 		: position{position}
 		, speed{speed}
 		, maxPosition{maxPosition}
 		, shape{shape}
-		, gun{gun}
-	{}
+	{
+		this->gun.reset(gun);
+	}
 
 	// Person(float x, float y)
 	// 	: position{{x,y}}

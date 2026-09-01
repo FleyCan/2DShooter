@@ -77,21 +77,21 @@ int main() {
 
 	Magazine magazine{{5.56, 45},30};
 
-	Full full{600};
+	Full firemode{600};
 
-	Gun gun{rectangle,{512,512},600,{5.56, 45},magazine,&full};
+	Gun gun{rectangle,{512,512},600,{5.56, 45},magazine,&firemode};
 
 
 	sf::CircleShape circle{50.0f};
 	circle.setOrigin(sf::Vector2f{50.0f,50.0f});
 	circle.setFillColor(sf::Color::Blue);
 
-	Person player{{512,512},2,{1024,1024},circle,gun};
+	Person player{{512,512},1,{1024,1024},circle,&gun};
 
 
 	circle.setFillColor(sf::Color::Red);
 
-	Person enemy{{900,900},2,{1024,1024},circle,gun};
+	Person enemy{{900,900},2,{1024,1024},circle,&gun};
 
 
 	sf::Vector2i mouse_position{};
@@ -123,25 +123,25 @@ int main() {
 			}
 			
 			if(event.type == sf::Event::MouseButtonPressed) {
-				player.gun.holdingTrigger = true;
+				player.gun->holdingTrigger = true;
 			}
 			if(event.type == sf::Event::MouseButtonReleased) {
-				player.gun.holdingTrigger = false;
+				player.gun->holdingTrigger = false;
 			}
 			if(event.type == sf::Event::KeyPressed) {
 				if(sf::Keyboard::isKeyPressed(sf::Keyboard::Scancode::V)) {
-					//player.gun.cycleFiremode();
+					//player.gun->cycleFiremode();
 				}
 				if(sf::Keyboard::isKeyPressed(sf::Keyboard::Scancode::Space)) {
-					enemy.gun.holdingTrigger = !enemy.gun.holdingTrigger;
+					enemy.gun->holdingTrigger = !enemy.gun->holdingTrigger;
 				}
 				if(sf::Keyboard::isKeyPressed(sf::Keyboard::Scancode::R)) {
-					player.gun.magazine.addAmmo(
+					player.gun->magazine->addAmmo(
 						Ammunition{
 							  {5.56,45}
 							, 10
 							, 5
-							,1028
+							, 1028
 						}
 					);
 				}
@@ -161,7 +161,7 @@ int main() {
 		enemy_counter += dt_in_seconds;
 		last_time = now;
 
-		player.gun.update(bulletSimulator, dt_in_seconds);
+		player.gun->update(bulletSimulator, dt_in_seconds);
 
 		std::cout << dt_in_seconds << '\n';
 		std::cout << input << '\n';
@@ -170,7 +170,7 @@ int main() {
 		std::cout << "degree = "
 		<<  radiantToDegree * (mouse_vector - player.position).orientation()
 		<< '\n';
-		std::cout << "gun rotation" << player.gun.shape.getRotation() << '\n';
+		std::cout << "gun rotation" << player.gun->shape.getRotation() << '\n';
 		std::cout << "number of bullets = " << bulletSimulator.bullets.size() << '\n';
 
 		player.update(
@@ -182,7 +182,7 @@ int main() {
 			, dt_in_seconds
 		);
 
-		player.gun.updatePosition(
+		player.gun->updatePosition(
 			  player.position
 			, (mouse_vector - player.position).orientation()
 		);
@@ -196,7 +196,7 @@ int main() {
 			, dt_in_seconds
 		);
 
-		enemy.gun.updatePosition(
+		enemy.gun->updatePosition(
 			  enemy.position
 			, (player.position - enemy.position).orientation()
 		);
@@ -215,10 +215,10 @@ int main() {
 
 		//scene.draw(window);
 		window.draw(player.shape);
-		window.draw(player.gun.shape);
+		window.draw(player.gun->shape);
 
 		window.draw(enemy.shape);
-		window.draw(enemy.gun.shape);
+		window.draw(enemy.gun->shape);
 
 		window.display();
 	}

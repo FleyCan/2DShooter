@@ -11,11 +11,16 @@
 struct Magazine : std::vector<Ammunition> {
 
 	AmmoType ammotype;
-	const int max_size;
+	int max_size;
 
 	Magazine(AmmoType ammotype, int size)
 		: ammotype{ammotype}
 		, max_size{size}
+	{}
+
+	Magazine(Magazine const& magazine)
+		: ammotype{magazine.ammotype}
+		, max_size{magazine.max_size}
 	{}
 
 	void addAmmo(Ammunition ammo) {

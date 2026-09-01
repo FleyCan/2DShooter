@@ -1,5 +1,6 @@
 #include "Gun.hpp"
 #include "Ammunition.hpp"
+#include "Firemode.hpp"
 
 void Gun::updatePosition(
 	Vector<float,2> position
@@ -22,7 +23,7 @@ void Gun::update(
 		return;
 	}
 
-	std::optional<Ammunition> ammo_o = magazine.getAmmo();
+	std::optional<Ammunition> ammo_o = magazine->getAmmo();
 	if(!ammo_o) {
 		return;
 	}
@@ -43,6 +44,16 @@ void Gun::update(
 	};
 
 	simulator.addBullet(bullet);
+
+	magazine->removeAmmo();
+}
+
+void Gun::addFiremode(Firemode* firemode) {
+	if(!firemode) return; //assert?
+
+	// std::unique_ptr<Firemode> p(firemode);
+
+	//firemodes.push_back(std::unique_ptr<Firemode>(firemode));
 }
 
 void reload(Magazine const& magazine) { //ref , pointer, copy ???
